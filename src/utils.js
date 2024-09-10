@@ -1,5 +1,5 @@
-/** SUMMARY OF CLASSES
- * '-' is-a relationship; '<' has-a relationship
+/** 클래스 요약
+ * '-'는 is-a 관계; '<'는 has-a 관계
  *
  * HelperGrid
  * Axes
@@ -19,8 +19,8 @@
 
 /** 2018-12-20
  * HelperGrid
- * This acts like a scaffold, and helps me find out the coordinates of the objects in a scene.
- * It is removed when the movie is actually rendered.
+ * 이것은 비계 역할을 하며, 장면의 객체 좌표를 찾는 데 도움을 줍니다.
+ * 실제 영화 렌더링 시에는 제거됩니다.
  */
 class HelperGrid {
     constructor(ctx, args) {
@@ -32,7 +32,7 @@ class HelperGrid {
     show() {
         this.s.strokeWeight(1);
 
-        // draw horizontal helper lines
+        // 수평 보조선 그리기
         this.s.stroke(137);
         for (let i = 100; i < this.w; i += 200) {
             this.s.line(i, 0, i, this.h);
@@ -46,7 +46,7 @@ class HelperGrid {
             this.s.line(i, 0, i, this.h);
         }
 
-        // draw vertical lines
+        // 수직선 그리기
         this.s.stroke(137);
         for (let i = 100; i < this.w; i += 200) {
             this.s.line(0, i, this.w, i);
@@ -65,37 +65,37 @@ class HelperGrid {
 
 /** 2018-12-23
  * Axes
- * Contains two arrows. If labelX and labelY are passed in, this class would be a singleton.
- * To be displayed correctly, labelX and labelY should contain only 1 character.
+ * 두 개의 화살표를 포함합니다. labelX와 labelY가 전달되면 이 클래스는 싱글톤이 됩니다.
+ * 올바르게 표시하려면 labelX와 labelY는 1자만 포함해야 합니다.
  *
- * ---- args list parameters ----
+ * ---- args 목록 매개변수 ----
  * @optional (number) top, bottom, left, right, centerX, centerY, stepX, stepY;
  *           (string) labelX, labelY, (number) offsetX, offsetY
  */
 class Axes {
     constructor(ctx, args) {
         this.s = ctx;
-        //this.showLabel = args.showLabel || false;  // show numerical labels
+        //this.showLabel = args.showLabel || false;  // 숫자 레이블 표시
 
-        // the following parameters define the scope of the plot'o grid lines on the canvas
-        // NOTE: top and left must be a multiple of 50
+        // 다음 매개변수는 캔버스의 그리드 선 범위를 정의합니다
+        // 참고: top과 left는 50의 배수여야 합니다
         this.top = args.top || 0;
         this.left = args.left || 0;
         this.bottom = args.bottom || ctx.height || height;
         this.right = args.right || ctx.width || width;
 
-        // define the origin'o x and y coordinates on the canvas
+        // 캔버스의 원점 x와 y 좌표 정의
         this.centerX = args.centerX || ctx.width / 2 || width / 2;
         this.centerY = args.centerY || ctx.height / 2 || height / 2;
 
-        // define how many pixels correspond to 1 on each axis
+        // 각 축의 1에 해당하는 픽셀 수 정의
         this.stepX = args.stepX || 100;
         this.stepY = args.stepY || 100;
 
         this.start = args.start || 0;
 
         if (args.labelX) {
-            this.offsetX = args.offsetX || -27;  // default offset value based on displaying x
+            this.offsetX = args.offsetX || -27;  // x 표시에 기반한 기본 오프셋 값
             this.label1 = new Katex(this.s, {
                 text: args.labelX,
                 x: this.right + this.offsetX, y: this.centerY - 95,
@@ -103,7 +103,7 @@ class Axes {
             });
         }
         if (args.labelY) {
-            this.offsetY = args.offsetY || -47;  // default offset value based on displaying y
+            this.offsetY = args.offsetY || -47;  // y 표시에 기반한 기본 오프셋 값
             this.label2 = new Katex(this.s, {
                 text: args.labelY,
                 x: this.centerX + 14, y: this.top + this.offsetY,
@@ -132,10 +132,10 @@ class Axes {
 
 /** 2018-12-21
  * Grid
- * A grid similar to what 3b1b used throughout the EOLA series
- * in the derived class'o show(), need to call showGrid()
+ * 3b1b가 EOLA 시리즈 전체에서 사용한 것과 유사한 그리드
+ * 파생 클래스의 show()에서 showGrid()를 호출해야 합니다
  *
- *  * ---- args list parameters ----
+ *  * ---- args 목록 매개변수 ----
  * @optional (number) top, bottom, left, right, centerX, centerY, stepX, stepY
  */
 class Grid extends Axes {
@@ -145,10 +145,10 @@ class Grid extends Axes {
         this.spacing = args.spacing || 50;
 
         this.maxNumLines = 0;
-        this.gridlineup = [];    // y-coords of grid lines above the x-axis
-        this.gridlinedown = [];  // y-coords of grid lines below the x-axis
-        this.gridlineleft = [];  // x-coords of grid lines left of y-axis
-        this.gridlineright = []; // x-coords of grid lines right of y-axis
+        this.gridlineup = [];    // x축 위의 그리드 선의 y 좌표
+        this.gridlinedown = [];  // x축 아래의 그리드 선의 y 좌표
+        this.gridlineleft = [];  // y축 왼쪽의 그리드 선의 x 좌표
+        this.gridlineright = []; // y축 오른쪽의 그리드 선의 x 좌표
         for (let i = 0, y = this.centerY - this.spacing; y > this.top; i++, y -= this.spacing) {
             this.gridlineup[i] = y;
             if (i > this.maxNumLines)
@@ -183,9 +183,9 @@ class Grid extends Axes {
         for (let i = 0; i < this.maxNumLines; ++i) {
             this.s.strokeWeight(2);
             if (this.s.frameCount - this.start - frames(1) > i * 2) {
-                if (i % 2 === 1) {  // major grid line
+                if (i % 2 === 1) {  // 주요 그리드 선
                     this.s.stroke(27, 177, 247);
-                } else {    // minor grid line
+                } else {    // 보조 그리드 선
                     this.s.stroke(17, 67, 77);
                 }
                 //stroke(27, 177, 247);
@@ -217,26 +217,26 @@ class Grid extends Axes {
 
 /** 2018-12-20,22
  * Plot
- * Contains a bunch of points, in addition to the axes
- * Can also derive from the Grid class
- * Capable of calculating the least square line of the points, and displaying the line
+ * 축 외에 여러 점을 포함합니다
+ * Grid 클래스에서 파생될 수도 있습니다
+ * 점들의 최소 제곱 직선을 계산하고 표시할 수 있습니다
  *
- * ---- args list parameters (in addition to axes) ----
+ * ---- args 목록 매개변수 (축 외에 추가) ----
  * xs, ys, startLSLine, startPt, lineColor,
- * [If want to show labels:] ptLabel: true, font: tnr
+ * [레이블을 표시하려면:] ptLabel: true, font: tnr
  */
 class Plot extends Axes {
-    // 2019-01-07: after refactoring, don't need to load a csv file, data is passed in as two arrays
+    // 2019-01-07: 리팩토링 후, csv 파일을 로드할 필요 없이 데이터가 두 개의 배열로 전달됩니다
     constructor(ctx, args) {
         super(ctx, args);
-        //this.showLabel = args.showLabel || false;  // show numerical labels
+        //this.showLabel = args.showLabel || false;  // 숫자 레이블 표시
 
-        // the x- and y- coordinates of all the points are stored in two separate arrays
-        // Xs and Ys are the original coordinates
-        // ptXs and ptYs store the transformed version: the coordinates on the canvas
+        // 모든 점의 x와 y 좌표는 두 개의 별도 배열에 저장됩니다
+        // Xs와 Ys는 원래 좌표입니다
+        // ptXs와 ptYs는 변환된 버전을 저장합니다: 캔버스의 좌표
         this.numPts = args.xs.length;
 
-        // time to start displaying least squares line
+        // 최소 제곱 직선 표시 시작 시간
         this.startLSLine = args.startLSLine || this.start + frames(1);
         this.startPt = args.startPt || this.start;
 
@@ -252,10 +252,10 @@ class Plot extends Axes {
                 start: this.startPt + i * frames(1) / this.numPts
             }) : new Point(this.s, {
                 x: this.ptXs[i], y: this.ptYs[i], radius: 12,
-                start: this.startPt + i * frames(1) / this.numPts  // display all points in 1 second
+                start: this.startPt + i * frames(1) / this.numPts  // 1초 동안 모든 점 표시
             });
         }
-        // calculate the parameters for displaying the least squares line on the canvas
+        // 캔버스에 최소 제곱 직선 표시를 위한 매개변수 계산
         this.calcParams();
 
         this.LSLine = new Line(this.s, {
@@ -292,8 +292,8 @@ class Plot extends Axes {
         return sum / this.numPts;
     }
 
-    // calculate the parameters, and the coordinates of least squares line
-    // formula: beta = (sum of xi * yi - n * coordX * coordY) / (sum of xi^2 - n * coordX^2)
+    // 매개변수와 최소 제곱 직선의 좌표 계산
+    // 공식: beta = (xi * yi의 합 - n * coordX * coordY) / (xi^2의 합 - n * coordX^2)
     calcParams() {
         this.avgX = this.avgxs();
         this.avgY = this.avgys();
