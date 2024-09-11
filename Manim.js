@@ -1,4 +1,4 @@
-// All util classes in one file
+// All util classes in one filed
 
 // +++---###---<<<       globals.js       >>>---###---+++
 /******
